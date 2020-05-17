@@ -11,7 +11,7 @@ public final class Server {
         ServerSocket listenSocket = new ServerSocket(port);
 
         while (true) {
-            // listen for requests
+            // accept requests
             Socket connectionSocket = listenSocket.accept();
 
             HttpRequest request = new HttpRequest(connectionSocket);
