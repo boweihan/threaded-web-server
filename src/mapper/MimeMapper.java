@@ -3,7 +3,7 @@ package mapper;
 import constant.FileExtension;
 import constant.MimeType;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -11,9 +11,9 @@ import java.util.Optional;
  * MimeMapper maps a string file extension (".txt") to a string MIME type ("text/plain").
  */
 public class MimeMapper {
-    private static Map<FileExtension, MimeType> extensionMimeTypeMap = new HashMap<>();
+    private static Map<FileExtension, MimeType> extensionMimeTypeMap = new EnumMap<>(FileExtension.class);
 
-    {
+    static {
         extensionMimeTypeMap.put(FileExtension.AVI, MimeType.AVI);
         extensionMimeTypeMap.put(FileExtension.BIN, MimeType.BIN);
         extensionMimeTypeMap.put(FileExtension.BMP, MimeType.BMP);
@@ -48,7 +48,7 @@ public class MimeMapper {
         try {
             Optional<FileExtension> optional = FileExtension.fromString(fileExtension);
             if (optional.isPresent()) {
-                MimeType mimeType =  extensionMimeTypeMap.get(optional.get());
+                MimeType mimeType = extensionMimeTypeMap.get(optional.get());
                 contentType = mimeType.contentType();
             } else {
                 contentType = MimeType.DEFAULT.contentType();

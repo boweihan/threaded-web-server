@@ -47,7 +47,7 @@ public enum FileExtension {
 
     public static Optional<FileExtension> fromString(String value) {
         return Arrays.stream(values())
-                .filter(e -> e.extension == value)
+                .filter(e -> e.extension().equals(value))
                 .findFirst();
     }
 }
