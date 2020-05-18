@@ -5,12 +5,13 @@ import constant.MimeType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * MimeMapper maps a string file extension (".txt") to a string MIME type ("text/plain").
  */
 public class MimeMapper {
-    public static Map<FileExtension, MimeType> extensionMimeTypeMap = new HashMap<>();
+    private static Map<FileExtension, MimeType> extensionMimeTypeMap = new HashMap<>();
 
     {
         extensionMimeTypeMap.put(FileExtension.AVI, MimeType.AVI);
@@ -41,13 +42,17 @@ public class MimeMapper {
         extensionMimeTypeMap.put(FileExtension.TEXT, MimeType.TEXT);
     }
 
-    public String getContentTypeForFileName(String fileExtension) {
+    public static String getContentTypeForFileName(String fileExtension) {
         String contentType;
 
         try {
-            FileExtension extension = FileExtension.valueOf(fileExtension);
-            MimeType mimeType =  extensionMimeTypeMap.get(extension);
-            contentType = mimeType.contentType();
+            Optional<FileExtension> optional = FileExtension.fromString(fileExtension);
+            if (optional.isPresent()) {
+                MimeType mimeType =  extensionMimeTypeMap.get(optional.get());
+                contentType = mimeType.contentType();
+            } else {
+                contentType = MimeType.DEFAULT.contentType();
+            }
 
         } catch(IllegalArgumentException | NullPointerException e) {
             // if there is no valid FileExtension or name is null

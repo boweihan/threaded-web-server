@@ -1,3 +1,5 @@
+import mapper.MimeMapper;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.StringTokenizer;
@@ -43,6 +45,7 @@ public class HttpRequest implements Runnable {
         try {
             fis = new FileInputStream(fileName);
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
             fileExists = false;
         }
 
@@ -53,7 +56,7 @@ public class HttpRequest implements Runnable {
 
         if (fileExists) {
             statusLine = "HTTP/1.0 200 OK" + CRLF;
-            contentTypeLine = "Content-type: " + contentType( fileName ) + CRLF;
+            contentTypeLine = "Content-type: " + MimeMapper.getContentTypeForFileName(getFileExtension(fileName)) + CRLF;
         } else {
             statusLine = "HTTP/1.0 404 Not Found" + CRLF;
             contentTypeLine = "Content-type: text/html; charset=UTF-8";
@@ -90,17 +93,12 @@ public class HttpRequest implements Runnable {
         }
     }
 
-    private static String contentType(String fileName) {
-        if (fileName.endsWith(".htm") || fileName.endsWith(".html")) {
-            return "text/html";
+    private String getFileExtension(String fileName) {
+        int lastIndexOf = fileName.lastIndexOf(".");
+        if (lastIndexOf == -1) {
+            return ""; // empty extension
         }
-        if (fileName.endsWith(".jpeg")) {
-            return "image/jpeg";
-        }
-        if (fileName.endsWith("jpg")) {
-            return "image/jpg";
-        }
-        return "";
+        return fileName.substring(lastIndexOf);
     }
 
 }

@@ -1,5 +1,8 @@
 package constant;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 /**
  * Enum to represent all supported file extensions. This list is not exhaustive.
  * A full(er) list of file extensions (https://www.sitepoint.com/mime-types-complete-list/).
@@ -40,5 +43,11 @@ public enum FileExtension {
 
     public String extension() {
         return extension;
+    }
+
+    public static Optional<FileExtension> fromString(String value) {
+        return Arrays.stream(values())
+                .filter(e -> e.extension == value)
+                .findFirst();
     }
 }
