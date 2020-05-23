@@ -52,21 +52,25 @@ public class HttpRequest implements Runnable {
         // construct the response message
         String statusLine = null;
         String contentTypeLine = null;
+        String contentLengthLine = null;
         String entityBody = null;
 
         if (fileExists) {
             statusLine = "HTTP/1.0 200 OK" + CRLF;
             contentTypeLine = "Content-type: " + MimeMapper.getContentTypeForFileName(getFileExtension(fileName)) + CRLF;
+            contentLengthLine = "Content-length: " + fis.getChannel().size() + CRLF;
         } else {
             statusLine = "HTTP/1.0 404 Not Found" + CRLF;
             contentTypeLine = "Content-type: text/html; charset=UTF-8";
             entityBody = "<HTML>" +
                 "<HEAD><TITLE>Not Found</TITLE></HEAD>" +
                 "<BODY>Not Found</BODY></HTML>" ;
+            contentLengthLine = "Content-length: " + entityBody.getBytes().length;
         }
 
         os.write(statusLine.getBytes());
         os.write(contentTypeLine.getBytes());
+        os.write(contentLengthLine.getBytes());
         os.write(CRLF.getBytes());
 
         if (fileExists) {
